@@ -99,8 +99,7 @@ def create_post():
     db.exampleapp.insert_one(doc)
 
 
-    return redirect(('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/read')
-) # tell the browser to make a request for the /read route
+    return redirect(('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/read')) # tell the browser to make a request for the /read route
 
 
 #login
@@ -263,7 +262,7 @@ def love(mongoid):
         {"_id": ObjectId(mongoid)}, 
         { "$set": docc }
     )
-    return redirect(url_for('read')) 
+    return redirect('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/read') 
 
 @app.errorhandler(Exception)
 def handle_error(e):
