@@ -218,7 +218,7 @@ def delete(mongoid):
         db.exampleapp.delete_one({"_id": ObjectId(mongoid)})
         return redirect(url_for('read'))
     else:
-        flash('You are not authorized to delete this post.')
+        #flash('You are not authorized to delete this post.')
         return redirect(url_for('read'))
 
 
