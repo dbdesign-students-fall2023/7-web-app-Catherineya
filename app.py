@@ -44,7 +44,7 @@ app.secret_key = 'your_secret_key'
 def require_login():
     allowed_routes = ['login', 'register', 'static']
     if not is_logged_in() and request.endpoint not in allowed_routes:
-        return redirect('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/login')
+        return redirect(url_for('login', _external=False))
 
 def is_logged_in():
     return 'username' in session
@@ -99,7 +99,7 @@ def create_post():
     db.exampleapp.insert_one(doc)
 
 
-    return redirect(('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/read')) # tell the browser to make a request for the /read route
+    return redirect(url_for('read', _external=False)) # tell the browser to make a request for the /read route
 
 
 #login
@@ -113,15 +113,15 @@ def login():
             session['username'] = username  # 记录用户到 session
             global g_username 
             g_username=username
-            return redirect('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/read')
+            return redirect(url_for('read', _external=False))
 
         elif not user:
             flash('User not found')
-            return redirect('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/register')
+            return redirect(url_for('register', _external=False))
 
         else:
             flash('Wrong password')
-            return redirect('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/login')
+            return redirect(url_for('login', _external=False))
 
     else:
         return render_template('login.html')
@@ -135,7 +135,7 @@ def register():
         password = request.form['password']
         password_hash = generate_password_hash(password)
         users.insert_one({'username': username, 'password': password_hash})
-        return redirect('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/login')
+        return redirect(url_for('login', _external=False))
   # 注册后重定向到登录页面
     return render_template('register.html')
 
@@ -143,7 +143,7 @@ def register():
 @app.route('/logout')
 def logout():
     session.pop('username', None)
-    return redirect('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/login')
+    return redirect(url_for('login', _external=False))
 
 
 @app.route('/edit/<mongoid>')
@@ -170,7 +170,7 @@ def edit(mongoid):
         return render_template('edit.html', mongoid=mongoid, doc=doc)
     else:
         flash('You are not authorized to edit this post.')
-        return redirect('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/read')
+        return redirect(url_for('read', _external=False))
 
 
 
@@ -200,7 +200,7 @@ def edit_post(mongoid):
         { "$set": doc }
     )
 
-    return redirect('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/read')
+    return redirect(url_for('read', _external=False))
  # tell the browser to make a request for the /read route
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -209,8 +209,7 @@ def search():
         query = request.form['query']
         docs = db.exampleapp.find({"$or": [{"name": {"$regex": query}}, {"message": {"$regex": query}}]}).sort("created_at", -1)
         return render_template('search.html', docs=docs)
-    return redirect('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/read')
-
+    return redirect(url_for('read', _external=False))
 # @app.route('/delete/<mongoid>')
 # def delete(mongoid):
 #     """
@@ -224,10 +223,10 @@ def delete(mongoid):
     doc = db.exampleapp.find_one({"_id": ObjectId(mongoid)})
     if 'username' in session and doc.get("name") == session['username']:
         db.exampleapp.delete_one({"_id": ObjectId(mongoid)})
-        return redirect('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/read')
+        return redirect(url_for('read', _external=False))
     else:
         flash('You are not authorized to delete this post.')
-        return redirect('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/read')
+        return redirect(url_for('read', _external=False))
 
 
 @app.route('/webhook', methods=['POST'])
@@ -262,7 +261,7 @@ def love(mongoid):
         {"_id": ObjectId(mongoid)}, 
         { "$set": docc }
     )
-    return redirect('https://i6.cims.nyu.edu/~jz5212/7-web-app-Catherineya/flask.cgi/read') 
+    return redirect(url_for('read', _external=False)) 
 
 @app.errorhandler(Exception)
 def handle_error(e):
