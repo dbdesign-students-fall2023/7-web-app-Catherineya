@@ -16,7 +16,7 @@ g_username=""
 
 # instantiate the app
 app = Flask(__name__)
-app.config['APPLICATION_ROOT'] = '/~jz5212/7-web-app-Catherineya/flask.cgi'
+#app.config['APPLICATION_ROOT'] = '/~jz5212/7-web-app-Catherineya/flask.cgi'
 
 
 # load credentials and configuration options from .env file
